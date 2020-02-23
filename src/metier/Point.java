@@ -6,5 +6,11 @@ public class Point {
     public int getX() { return x; }
     public int getY() { return y; }
     public boolean equals(Object obj) { return this.x==((Point)obj).x && this.y==((Point)obj).y; }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public String toString() { return "<"+x+";"+y+">"; }
 }

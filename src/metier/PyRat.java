@@ -4,8 +4,20 @@ import java.util.*;
 
 public class PyRat {
 
+    ArrayList<Point> listeFromage = new ArrayList<Point>();
+    HashMap<Integer, Point> cFromage = new HashMap<>();
+
+    Map<Point, List<Point>> labyrinthe;
+
     /* Méthode appelée une seule fois permettant d'effectuer des traitements "lourds" afin d'augmenter la performace de la méthode turn. */
     public void preprocessing(Map<Point, List<Point>> laby, int labyWidth, int labyHeight, Point position, List<Point> fromages) {
+        int cpt = 0;
+        for (Point p : fromages){
+            listeFromage.add(p);
+            cFromage.put(cpt, p);
+            cpt++;
+        }
+        this.labyrinthe = laby;
     }
 
     /* Méthode de test appelant les différentes fonctionnalités à développer.
@@ -26,18 +38,33 @@ public class PyRat {
     /* Regarde dans la liste des fromages s’il y a un fromage à la position pos.
         @return true s'il y a un fromage à la position pos, false sinon. */
     private boolean fromageIci(Point pos) {
+        for (Point p : listeFromage){
+            if (pos.equals(p)){
+                return true;
+            }
+        }
         return false;
     }
 
     /* Regarde de manière performante (accès en ordre constant) s’il y a un fromage à la position pos.
         @return true s'il y a un fromage à la position pos, false sinon. */
     private boolean fromageIci_EnOrdreConstant(Point pos) {
-        return false;
+        return cFromage.containsValue(pos);
     }
 
     /* Indique si le joueur peut passer de la position (du Point) « de » au point « a ».
         @return true s'il y a un passage depuis  « de » vers « a ». */
     private boolean passagePossible(Point de, Point a) {
+        for (Point p : labyrinthe.keySet()){
+            if (de.equals(p)){
+               if(labyrinthe.get(p).contains(a)){
+                   return true;
+               }
+               else{
+                   return false;
+               }
+            }
+        }
         return false;
     }
 
@@ -45,12 +72,19 @@ public class PyRat {
         mais sans devoir parcourir la liste des Points se trouvant dans la Map !
         @return true s'il y a un passage depuis  « de » vers « a ». */
     private boolean passagePossible_EnOrdreConstant(Point de, Point a) {
+        //return labyrinthe.get(de).contains(a);
         return false;
     }
 
     /* Retourne la liste des points qui ne peuvent pas être atteints depuis la position « pos ».
         @return la liste des points qui ne peuvent pas être atteints depuis la position « pos ». */
     private List<Point> pointsInatteignables(Point pos) {
-        return null;
+        ArrayList<Point> lst = new ArrayList();
+        for (Point p : labyrinthe.keySet()){
+            if (!passagePossible(pos, p)) {
+                lst.add(p);
+            }
+        }
+        return lst;
     }
 }
